@@ -16,7 +16,7 @@ onMounted(() => {
       v-if="loading"
       class="loading"
     >
-      <strong>致力于让 Markdown 编辑更简单</strong>
+      <strong>致力于让 AI 惠及每个人</strong>
     </div>
   </transition>
 </template>
@@ -37,7 +37,7 @@ onMounted(() => {
   background-color: var(--el-bg-color-page);
 
   &::before {
-    content: url('../assets/images/favicon.png');
+    content: url('../assets/images/effish-font.svg');
     width: 100px;
     height: 100px;
     margin-bottom: 26px;

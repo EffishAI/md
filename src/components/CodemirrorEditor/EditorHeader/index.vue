@@ -42,6 +42,7 @@ import EditDropdown from './EditDropdown.vue'
 import FileDropdown from './FileDropdown.vue'
 import HelpDropdown from './HelpDropdown.vue'
 
+import HomeDropdown from './HomeDropdown.vue'
 import PostInfo from './PostInfo.vue'
 import StyleDropdown from './StyleDropdown.vue'
 
@@ -166,6 +167,7 @@ function customStyle() {
 <template>
   <header class="header-container h-15 flex items-center px-5">
     <Menubar class="menubar mr-auto">
+      <HomeDropdown />
       <FileDropdown />
 
       <MenubarMenu>

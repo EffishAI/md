@@ -54,7 +54,7 @@ const {
 } = displayStore
 
 const isImgLoading = ref(false)
-const timeout = ref<NodeJS.Timeout>()
+const timeout = ref<Timer>()
 
 const preview = ref<typeof ElCol | null>(null)
 
@@ -186,7 +186,7 @@ function uploadImage(file: File, cb?: { (url: any): void, (arg0: unknown): void 
     })
 }
 
-const changeTimer = ref<NodeJS.Timeout>()
+const changeTimer = ref<Timer>()
 
 // 监听暗色模式并更新编辑器
 watch(isDark, () => {
@@ -529,7 +529,7 @@ onMounted(() => {
     .loading__img {
       width: 75px;
       height: 75px;
-      background: url('../assets/images/favicon.png') no-repeat;
+      background: url('../assets/images/effish-font.svg') no-repeat;
       margin: 1em auto;
       background-size: cover;
     }
