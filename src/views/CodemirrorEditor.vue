@@ -27,6 +27,9 @@ import CodeMirror from 'codemirror'
 
 import { ElCol, ElMessage } from 'element-plus'
 
+import { Base64 } from 'js-base64'
+import pako from 'pako'
+
 import { storeToRefs } from 'pinia'
 
 import { onMounted, ref, toRaw, watch } from 'vue'
@@ -375,7 +378,25 @@ function mdLocalToRemote() {
   }
 }
 
+function initEditorContentFromURL() {
+  try {
+    const urlParams = new URLSearchParams(window.location.search)
+    const mdBase64 = urlParams.get(`content`)
+    if (mdBase64) {
+      const compressedData = Base64.toUint8Array(mdBase64)
+      const decompressedData = pako.ungzip(compressedData)
+      const decoder = new TextDecoder()
+      const mdContent = decoder.decode(decompressedData)
+      editorContent.value = mdContent
+    }
+  }
+  catch (e) {
+    console.error(e)
+  }
+}
+
 onMounted(() => {
+  initEditorContentFromURL()
   initEditor()
   onEditorRefresh()
   mdLocalToRemote()
