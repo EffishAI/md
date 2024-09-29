@@ -41,7 +41,7 @@ function onRedirect(url: string) {
         <img
           class="mx-auto my-5"
           src="https://effish.com/effish-font.svg"
-          alt="Doocs Markdown 编辑器"
+          alt="效率鱼"
           style="width: 40%"
         >
         <h3>效率鱼是一款基于AI大模型的效率办公工具集</h3>
