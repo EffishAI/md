@@ -54,7 +54,7 @@ const {
 } = displayStore
 
 const isImgLoading = ref(false)
-const timeout = ref<Timer>()
+const timeout = ref<NodeJS.Timeout>()
 
 const preview = ref<typeof ElCol | null>(null)
 
@@ -186,7 +186,7 @@ function uploadImage(file: File, cb?: { (url: any): void, (arg0: unknown): void 
     })
 }
 
-const changeTimer = ref<Timer>()
+const changeTimer = ref<NodeJS.Timeout>()
 
 // 监听暗色模式并更新编辑器
 watch(isDark, () => {
