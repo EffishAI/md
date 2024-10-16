@@ -27,37 +27,37 @@ function inlineKatex(options, renderer) {
   return {
     name: `inlineKatex`,
     level: `inline`,
-    start(src) {
-      let index
-      let indexSrc = src
-
-      while (indexSrc) {
-        index = indexSrc.indexOf(`$`)
-        if (index === -1) {
-          index = indexSrc.indexOf(`\(`)
-          if (index === -1) {
-            return
-          }
-        }
-        const f = nonStandard ? index > -1 : index === 0 || indexSrc.charAt(index - 1) === ` `
-        if (f) {
-          const possibleKatex = indexSrc.substring(index)
-
-          if (possibleKatex.match(ruleReg)) {
-            return index
-          }
-        }
-
-        indexSrc = indexSrc.substring(index + 1).replace(/^\$+/, ``).replace(/^\(/, ``)
-      }
-    },
     // start(src) {
-    //   const index = src.search(/[$\\]/)
-    //   if (index === -1) {
-    //     return
+    //   let index
+    //   let indexSrc = src
+
+    //   while (indexSrc) {
+    //     index = indexSrc.indexOf(`$`)
+    //     if (index === -1) {
+    //       index = indexSrc.indexOf(`\(`)
+    //       if (index === -1) {
+    //         return
+    //       }
+    //     }
+    //     const f = nonStandard ? index > -1 : index === 0 || indexSrc.charAt(index - 1) === ` `
+    //     if (f) {
+    //       const possibleKatex = indexSrc.substring(index)
+
+    //       if (possibleKatex.match(ruleReg)) {
+    //         return index
+    //       }
+    //     }
+
+    //     indexSrc = indexSrc.substring(index + 1).replace(/^\$+/, ``).replace(/^\(/, ``)
     //   }
-    //   return index
     // },
+    start(src) {
+      const index = src.search(/[$\\]/)
+      if (index === -1) {
+        return
+      }
+      return index
+    },
     tokenizer(src) {
       const match = src.match(ruleReg)
       console.log(match)
