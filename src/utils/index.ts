@@ -14,15 +14,15 @@ export function addPrefix(str: string) {
 }
 
 export function customizeTheme(theme: Theme, options: {
-  fontSize?: string
+  fontSize?: number
   color?: string
 }) {
   const newTheme = JSON.parse(JSON.stringify(theme))
   const { fontSize, color } = options
   if (fontSize) {
-    for (let i = 1; i <= 4; i++) {
+    for (let i = 1; i <= 6; i++) {
       const v = newTheme.block[`h${i}`][`font-size`]
-      newTheme.block[`h${i}`][`font-size`] = `${Number(fontSize) * Number.parseFloat(v)}px`
+      newTheme.block[`h${i}`][`font-size`] = `${fontSize * Number.parseFloat(v)}px`
     }
   }
   if (color) {
@@ -47,6 +47,8 @@ export function customCssWithTemplate(jsonString: Partial<Record<Block | Inline,
     `h2`,
     `h3`,
     `h4`,
+    `h5`,
+    `h6`,
     `code`,
     `code_pre`,
     `p`,

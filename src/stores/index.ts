@@ -28,6 +28,10 @@ export const useStore = defineStore(`store`, () => {
   const isCiteStatus = useStorage(`isCiteStatus`, false)
   const toggleCiteStatus = useToggle(isCiteStatus)
 
+  // 是否开启段落首行缩进
+  const isUseIndent = useStorage(addPrefix(`use_indent`), false)
+  const toggleUseIndent = useToggle(isUseIndent)
+
   const output = ref(``)
 
   // 文本字体
@@ -43,7 +47,7 @@ export const useStore = defineStore(`store`, () => {
   // 图注格式
   const legend = useStorage(`legend`, legendOptions[3].value)
 
-  const fontSizeNumber = computed(() => fontSize.value.replace(`px`, ``))
+  const fontSizeNumber = computed(() => Number(fontSize.value.replace(`px`, ``)))
 
   // 内容编辑器编辑器
   const editor = ref<CodeMirror.EditorFromTextArea | null>(null)
@@ -53,8 +57,8 @@ export const useStore = defineStore(`store`, () => {
   // 格式化文档
   const formatContent = () => {
     formatDoc((editor.value!).getValue()).then((doc) => {
-      editorContent.value = doc;
-      (editor.value!).setValue(doc)
+      editorContent.value = doc
+      toRaw(editor.value!).setValue(doc)
     })
   }
 
@@ -132,13 +136,14 @@ export const useStore = defineStore(`store`, () => {
   const renderer = initRenderer({
     theme: customCssWithTemplate(css2json(getCurrentTab().content), primaryColor.value, customizeTheme(themeMap[theme.value], { fontSize: fontSizeNumber.value, color: primaryColor.value })),
     fonts: fontFamily.value,
-    size: fontSizeNumber.value,
+    size: fontSize.value,
+    isUseIndent: isUseIndent.value,
   })
 
   // 更新编辑器
   const editorRefresh = () => {
     codeThemeChange()
-    renderer.reset({ status: isCiteStatus.value, legend: legend.value })
+    renderer.reset({ status: isCiteStatus.value, legend: legend.value, isUseIndent: isUseIndent.value })
     let outputTemp = marked.parse(editor.value!.getValue()) as string
 
     // 去除第一行的 margin-top
@@ -264,7 +269,7 @@ export const useStore = defineStore(`store`, () => {
 
   const getTheme = (size: string, color: string) => {
     const newTheme = themeMap[theme.value]
-    const fontSize = size.replace(`px`, ``)
+    const fontSize = Number(size.replace(`px`, ``))
     return customCssWithTemplate(css2json(getCurrentTab().content), color, customizeTheme(newTheme, { fontSize, color }))
   }
 
@@ -316,6 +321,10 @@ export const useStore = defineStore(`store`, () => {
 
   const citeStatusChanged = withAfterRefresh(() => {
     toggleCiteStatus()
+  })
+
+  const useIndentChanged = withAfterRefresh(() => {
+    toggleUseIndent()
   })
 
   // 导出编辑器内容为 HTML，并且下载到本地
@@ -389,6 +398,8 @@ export const useStore = defineStore(`store`, () => {
     isMacCodeBlock,
     isCiteStatus,
     citeStatusChanged,
+    isUseIndent,
+    useIndentChanged,
 
     output,
     editor,
