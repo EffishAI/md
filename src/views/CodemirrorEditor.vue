@@ -529,7 +529,7 @@ onMounted(() => {
     .loading__img {
       width: 75px;
       height: 75px;
-      background: url('../assets/images/effish-font.svg') no-repeat;
+      background: url('https://effish.com/effish-large.png') no-repeat;
       margin: 1em auto;
       background-size: cover;
     }

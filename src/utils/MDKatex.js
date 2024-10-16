@@ -1,7 +1,8 @@
-const inlineRule = /^(\${1,2})(?!\$)((?:\\.|[^\\\n])*?(?:\\.|[^\\\n$]))\1(?=[\s?!.,:？！。，：]|$)/
-const inlineRuleNonStandard = /^(\${1,2})(?!\$)((?:\\.|[^\\\n])*?(?:\\.|[^\\\n$]))\1/ // Non-standard, even if there are no spaces before and after $ or $$, try to parse
+const inlineRule = /^(?:\\\((.*?)\\\)|(\${1,2})(?!\$)((?:\\.|[^\\\n])*?)(?:\\.|[^\\\n$])\2)(?=[\s?!.,:？！。，：]|$)/
 
-const blockRule = /^(\${1,2})\n((?:\\[\s\S]|[^\\])+?)\n\1(?:\n|$)/
+const inlineRuleNonStandard = /^(?:\\\((.*?)\\\)|(\${1,2})(?!\$)((?:\\.|[^\\\n])+?)\2)/
+
+const blockRule = /^(?:\\\[((?:\\[\s\S]|[^\]])*?)\\\]|(\${2})\n((?:\\[\s\S]|[^\\])+?)\n\2)(?:\n|$)/
 
 function createRenderer(display) {
   return (token) => {
@@ -33,7 +34,10 @@ function inlineKatex(options, renderer) {
       while (indexSrc) {
         index = indexSrc.indexOf(`$`)
         if (index === -1) {
-          return
+          index = indexSrc.indexOf(`\(`)
+          if (index === -1) {
+            return
+          }
         }
         const f = nonStandard ? index > -1 : index === 0 || indexSrc.charAt(index - 1) === ` `
         if (f) {
@@ -44,17 +48,25 @@ function inlineKatex(options, renderer) {
           }
         }
 
-        indexSrc = indexSrc.substring(index + 1).replace(/^\$+/, ``)
+        indexSrc = indexSrc.substring(index + 1).replace(/^\$+/, ``).replace(/^\(/, ``)
       }
     },
+    // start(src) {
+    //   const index = src.search(/[$\\]/)
+    //   if (index === -1) {
+    //     return
+    //   }
+    //   return index
+    // },
     tokenizer(src) {
       const match = src.match(ruleReg)
+      console.log(match)
       if (match) {
         return {
           type: `inlineKatex`,
           raw: match[0],
-          text: match[2].trim(),
-          displayMode: match[1].length === 2,
+          text: (match[1] || match[3]).trim(),
+          displayMode: match[2]?.length === 2 || false,
         }
       }
     },
@@ -72,8 +84,8 @@ function blockKatex(options, renderer) {
         return {
           type: `blockKatex`,
           raw: match[0],
-          text: match[2].trim(),
-          displayMode: match[1].length === 2,
+          text: (match[1] || match[3]).trim(),
+          displayMode: !!match[1], // true if matched with \[
         }
       }
     },
